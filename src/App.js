@@ -14,6 +14,7 @@ import UploadsPage from './pages/UploadsPage';
 import HiringManagerDashboard from './pages/HiringManagerDashboard';
 import ITStaffDashboard from './pages/ITStaffDashboard';
 import PayrollOfficerDashboard from './pages/PayrollOfficerDashboard';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -42,7 +43,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes - No Layout */}
+        {<Route path="/landing" element={<LandingPage />} />}
         <Route path="/register" element={
           !user ? (
             <div className="min-h-screen flex flex-col bg-sky-wash">
