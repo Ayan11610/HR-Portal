@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
+import { motion } from 'framer-motion';
 
 function CompliancePage({ user }) {
   const [vevoStatus, setVevoStatus] = useState({
@@ -30,7 +31,6 @@ function CompliancePage({ user }) {
   const getEmployeeId = async () => {
     console.log('Looking up employee for user:', user.id);
     
-    // Don't use .single() — it throws error if no rows. Use .maybeSingle() or check array
     const { data: empData, error } = await supabase
       .from('employees')
       .select('id, visa_required, visa_type, visa_expiry')
@@ -52,7 +52,6 @@ function CompliancePage({ user }) {
       fetchComplianceStatus(employee.id);
     } else {
       console.log('No employee found — need to create profile first');
-      // Don't show alert here, let the button handler show it
     }
   };
 
@@ -207,147 +206,194 @@ function CompliancePage({ user }) {
   const getStatusBadge = (status) => {
     switch(status) {
       case 'Valid':
-        return 'bg-verified-green/10 text-verified-green border border-verified-green/20';
+        return 'bg-verified-green/10 text-verified-green border-verified-green/20';
       case 'Failed':
-        return 'bg-red-50 text-red-600 border border-red-200';
+        return 'bg-red-50 text-red-600 border-red-200';
       default:
-        return 'bg-alert-amber/10 text-alert-amber border border-alert-amber/20';
+        return 'bg-alert-amber/10 text-alert-amber border-alert-amber/20';
     }
   };
 
   return (
-    <div>
-      <div className="mb-6 pb-4 border-b border-light-border">
-        <h2 className="text-xl font-bold text-charcoal">Compliance Verification</h2>
-        <p className="text-sm text-slate-500 mt-1">
-          Automated regulatory checks via Department of Home Affairs and Australian Taxation Office.
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-slate-900 mb-2">Compliance Verification</h2>
+        <p className="text-slate-600">
+          Automated regulatory checks via Department of Home Affairs and Australian Taxation Office
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* VEVO Card */}
-        <div className="portal-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-portal-navy/10 rounded-lg flex items-center justify-center">
-                <span className="text-portal-navy font-bold text-sm">V</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="portal-card p-8"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-anchor-blue/10 rounded-xl flex items-center justify-center">
+                <span className="text-anchor-blue font-bold text-xl">V</span>
               </div>
               <div>
-                <h3 className="font-semibold text-charcoal">VEVO Visa Check</h3>
-                <p className="text-xs text-slate-500">Department of Home Affairs</p>
+                <h3 className="font-semibold text-slate-900 text-lg">VEVO Visa Check</h3>
+                <p className="text-sm text-slate-500">Department of Home Affairs</p>
               </div>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(vevoStatus.status)}`}>
+            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${getStatusBadge(vevoStatus.status)}`}>
               {vevoStatus.status}
             </span>
           </div>
 
           {vevoStatus.status === 'Valid' ? (
-            <div className="space-y-3 mb-4">
-              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                <p className="text-xs text-verified-green font-medium mb-1">Work Rights Confirmed</p>
-                <p className="text-xs text-slate-600">{vevoStatus.visaClass}</p>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-4 mb-6"
+            >
+              <div className="p-4 bg-verified-green/10 border border-verified-green/20 rounded-xl">
+                <p className="text-sm text-verified-green font-semibold mb-2">✓ Work Rights Confirmed</p>
+                <p className="text-sm text-slate-700">{vevoStatus.visaClass}</p>
               </div>
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div>
-                  <p className="text-slate-500">Visa Expiry</p>
-                  <p className="font-medium text-charcoal">{vevoStatus.visaExpiry}</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  <p className="text-xs text-slate-500 mb-1">Visa Expiry</p>
+                  <p className="font-semibold text-slate-900">{vevoStatus.visaExpiry}</p>
                 </div>
-                <div>
-                  <p className="text-slate-500">Checked At</p>
-                  <p className="font-medium text-charcoal">{vevoStatus.checkedAt ? new Date(vevoStatus.checkedAt).toLocaleDateString() : '-'}</p>
+                <div className="p-3 bg-slate-50 rounded-lg">
+                  <p className="text-xs text-slate-500 mb-1">Checked At</p>
+                  <p className="font-semibold text-slate-900">{vevoStatus.checkedAt ? new Date(vevoStatus.checkedAt).toLocaleDateString() : '-'}</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-600 bg-slate-50 p-2 rounded">{vevoStatus.workConditions}</p>
-            </div>
+              <p className="text-sm text-slate-600 bg-slate-50 p-4 rounded-lg leading-relaxed">{vevoStatus.workConditions}</p>
+            </motion.div>
           ) : (
-            <div className="mb-4">
-              <p className="text-sm text-slate-600 mb-3">
+            <div className="mb-6">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Verify your visa entitlements and work rights in Australia.
                 {profile?.visa_required && (
-                  <span className="block mt-1 text-xs text-alert-amber">
-                    Visa required: {profile.visa_type || 'Not specified'}
+                  <span className="block mt-2 text-sm text-alert-amber font-medium">
+                    ⚠ Visa required: {profile.visa_type || 'Not specified'}
                   </span>
                 )}
               </p>
             </div>
           )}
 
-          <button
+          <motion.button
             onClick={mockVevoCheck}
             disabled={vevoLoading || vevoStatus.status === 'Valid'}
-            className="w-full py-2.5 px-4 bg-portal-navy hover:bg-blue-700 text-white font-medium rounded-md transition disabled:opacity-50"
+            whileHover={{ scale: (vevoLoading || vevoStatus.status === 'Valid') ? 1 : 1.02 }}
+            whileTap={{ scale: (vevoLoading || vevoStatus.status === 'Valid') ? 1 : 0.98 }}
+            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {vevoLoading ? 'Verifying with VEVO...' : vevoStatus.status === 'Valid' ? 'Verified' : 'Verify Work Rights'}
-          </button>
-        </div>
+            {vevoLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Verifying with VEVO...
+              </span>
+            ) : vevoStatus.status === 'Valid' ? '✓ Verified' : 'Verify Work Rights'}
+          </motion.button>
+        </motion.div>
 
         {/* ATO Card */}
-        <div className="portal-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-portal-navy/10 rounded-lg flex items-center justify-center">
-                <span className="text-portal-navy font-bold text-sm">A</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="portal-card p-8"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-verified-green/10 rounded-xl flex items-center justify-center">
+                <span className="text-verified-green font-bold text-xl">A</span>
               </div>
               <div>
-                <h3 className="font-semibold text-charcoal">ATO Stapled Super</h3>
-                <p className="text-xs text-slate-500">Australian Taxation Office</p>
+                <h3 className="font-semibold text-slate-900 text-lg">ATO Stapled Super</h3>
+                <p className="text-sm text-slate-500">Australian Taxation Office</p>
               </div>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(atoStatus.status)}`}>
+            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${getStatusBadge(atoStatus.status)}`}>
               {atoStatus.status}
             </span>
           </div>
 
           {atoStatus.status === 'Valid' ? (
-            <div className="space-y-3 mb-4">
-              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                <p className="text-xs text-verified-green font-medium mb-1">Stapled Fund Confirmed</p>
-                <p className="text-xs text-slate-600">{atoStatus.fundName}</p>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-4 mb-6"
+            >
+              <div className="p-4 bg-verified-green/10 border border-verified-green/20 rounded-xl">
+                <p className="text-sm text-verified-green font-semibold mb-2">✓ Stapled Fund Confirmed</p>
+                <p className="text-sm text-slate-700">{atoStatus.fundName}</p>
               </div>
-              <div className="text-xs">
-                <p className="text-slate-500">USI</p>
-                <p className="font-medium text-charcoal">{atoStatus.usi}</p>
+              <div className="p-3 bg-slate-50 rounded-lg">
+                <p className="text-xs text-slate-500 mb-1">USI</p>
+                <p className="font-semibold text-slate-900">{atoStatus.usi}</p>
               </div>
               <p className="text-xs text-slate-500">Checked: {atoStatus.checkedAt ? new Date(atoStatus.checkedAt).toLocaleDateString() : '-'}</p>
-            </div>
+            </motion.div>
           ) : (
-            <div className="mb-4">
-              <p className="text-sm text-slate-600">
+            <div className="mb-6">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Confirm your stapled superannuation fund to prevent duplicate accounts and fee erosion under choice-of-fund rules.
               </p>
             </div>
           )}
 
-          <button
+          <motion.button
             onClick={mockAtoCheck}
             disabled={atoLoading || atoStatus.status === 'Valid'}
-            className="w-full py-2.5 px-4 bg-portal-navy hover:bg-blue-700 text-white font-medium rounded-md transition disabled:opacity-50"
+            whileHover={{ scale: (atoLoading || atoStatus.status === 'Valid') ? 1 : 1.02 }}
+            whileTap={{ scale: (atoLoading || atoStatus.status === 'Valid') ? 1 : 0.98 }}
+            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {atoLoading ? 'Querying ATO...' : atoStatus.status === 'Valid' ? 'Confirmed' : 'Find Stapled Super Fund'}
-          </button>
-        </div>
+            {atoLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Querying ATO...
+              </span>
+            ) : atoStatus.status === 'Valid' ? '✓ Confirmed' : 'Find Stapled Super Fund'}
+          </motion.button>
+        </motion.div>
       </div>
 
       {/* Integration Notes */}
-      <div className="mt-6 portal-card p-4">
-        <h4 className="text-sm font-semibold text-charcoal mb-2">Integration Details</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600">
-          <div>
-            <p className="font-medium text-slate-700 mb-1">VEVO API</p>
-            <p>Endpoint: /v1/australian-workrights</p>
-            <p>Auth: Bearer token + MTLS</p>
-            <p>Response: isEntitledToWork, visaClass, visaExpiry, workConditions</p>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="portal-card p-6"
+      >
+        <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Integration Details</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-600">
+          <div className="space-y-2">
+            <p className="font-semibold text-slate-900 mb-2">VEVO API</p>
+            <p><span className="text-slate-500">Endpoint:</span> /v1/australian-workrights</p>
+            <p><span className="text-slate-500">Auth:</span> Bearer token + MTLS</p>
+            <p><span className="text-slate-500">Response:</span> isEntitledToWork, visaClass, visaExpiry</p>
           </div>
-          <div>
-            <p className="font-medium text-slate-700 mb-1">ATO DSP API</p>
-            <p>Endpoint: /stapled-super-fund/request</p>
-            <p>Auth: X-ATO-Product-ID + Client Certificates</p>
-            <p>Response: stapledSuperFundDetails.fundName, USI</p>
+          <div className="space-y-2">
+            <p className="font-semibold text-slate-900 mb-2">ATO DSP API</p>
+            <p><span className="text-slate-500">Endpoint:</span> /stapled-super-fund/request</p>
+            <p><span className="text-slate-500">Auth:</span> X-ATO-Product-ID + Client Certificates</p>
+            <p><span className="text-slate-500">Response:</span> stapledSuperFundDetails.fundName, USI</p>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

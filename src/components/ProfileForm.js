@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
+import { motion } from 'framer-motion';
 
 function ProfileForm({ user }) {
   const [employeeData, setEmployeeData] = useState({
@@ -169,31 +170,31 @@ function ProfileForm({ user }) {
   };
 
   return (
-    <div className="portal-card p-8">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-charcoal">Employee Profile</h2>
-        <p className="text-sm text-slate-500 mt-1">Complete your employment and financial details. Sensitive data is encrypted.</p>
-      </div>
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="portal-card p-8"
+    >
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Employment Details */}
-        <div className="border-b border-light-border pb-6">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">Employment Details</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="border-b border-slate-200 pb-8">
+          <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-6">Employment Details</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
               <input
                 type="text"
                 name="full_name"
                 value={employeeData.full_name}
                 onChange={handleEmployeeChange}
                 required
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="John Smith"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Work Email</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Work Email</label>
               <input
                 type="email"
                 name="email"
@@ -201,39 +202,39 @@ function ProfileForm({ user }) {
                 onChange={handleEmployeeChange}
                 required
                 disabled
-                className="w-full px-3 py-2 border border-light-border rounded-md bg-slate-50 text-sm text-slate-500"
+                className="input-field bg-slate-50 text-slate-500 cursor-not-allowed"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Start Date</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Start Date</label>
               <input
                 type="date"
                 name="start_date"
                 value={employeeData.start_date}
                 onChange={handleEmployeeChange}
                 required
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Department</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Department</label>
               <input
                 type="text"
                 name="dept_id"
                 value={employeeData.dept_id}
                 onChange={handleEmployeeChange}
                 required
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="Engineering"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Employment Type</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Employment Type</label>
               <select
                 name="employment_type"
                 value={employeeData.employment_type}
                 onChange={handleEmployeeChange}
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
               >
                 <option value="full-time">Full-time</option>
                 <option value="part-time">Part-time</option>
@@ -245,87 +246,106 @@ function ProfileForm({ user }) {
         </div>
 
         {/* Financial Details */}
-        <div className="border-b border-light-border pb-6">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">Financial Details (Encrypted)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="border-b border-slate-200 pb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Financial Details</h3>
+            <span className="px-2 py-0.5 bg-verified-green/10 text-verified-green text-xs font-medium rounded-full border border-verified-green/20">🔒 Encrypted</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Tax File Number (TFN)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Tax File Number (TFN)</label>
               <input
                 type="password"
                 name="tfn"
                 value={financialData.tfn}
                 onChange={handleFinancialChange}
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="123 456 789"
               />
-              <p className="text-xs text-slate-500 mt-1">Encrypted with AES-256 via pgcrypto</p>
+              <p className="text-xs text-slate-500 mt-2">AES-256 encrypted via pgcrypto</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Bank BSB</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Bank BSB</label>
               <input
                 type="text"
                 name="bank_bsb"
                 value={financialData.bank_bsb}
                 onChange={handleFinancialChange}
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="062-000"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Bank Account Number</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Bank Account Number</label>
               <input
                 type="text"
                 name="bank_account"
                 value={financialData.bank_account}
                 onChange={handleFinancialChange}
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="12345678"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Superannuation Fund</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Superannuation Fund</label>
               <input
                 type="text"
                 name="super_fund_name"
                 value={financialData.super_fund_name}
                 onChange={handleFinancialChange}
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="AustralianSuper"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Super Fund USI</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Super Fund USI</label>
               <input
                 type="text"
                 name="super_usi"
                 value={financialData.super_usi}
                 onChange={handleFinancialChange}
-                className="w-full px-3 py-2 border border-light-border rounded-md focus:outline-none focus:ring-2 focus:ring-portal-navy text-sm"
+                className="input-field"
                 placeholder="65 714 394 898"
               />
             </div>
           </div>
         </div>
 
-        <button
+        <motion.button
           type="submit"
           disabled={loading}
-          className="w-full btn-primary disabled:opacity-50"
+          whileHover={{ scale: loading ? 1 : 1.02 }}
+          whileTap={{ scale: loading ? 1 : 0.98 }}
+          className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Saving...' : 'Save Profile'}
-        </button>
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving...
+            </span>
+          ) : (
+            'Save Profile'
+          )}
+        </motion.button>
       </form>
 
       {message && (
-        <div className={`mt-4 p-3 rounded-md text-sm ${
-          messageType === 'success' 
-            ? 'bg-green-50 text-verified-green border border-green-200' 
-            : 'bg-red-50 text-red-800 border border-red-200'
-        }`}>
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`mt-6 p-4 rounded-lg text-sm font-medium ${
+            messageType === 'success' 
+              ? 'bg-verified-green/10 text-verified-green border border-verified-green/20' 
+              : 'bg-red-50 text-red-700 border border-red-200'
+          }`}
+        >
           {message}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

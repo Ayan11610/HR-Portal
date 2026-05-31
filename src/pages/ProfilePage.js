@@ -1,19 +1,22 @@
 import React from 'react';
 import ProfileForm from '../components/ProfileForm';
+import { motion } from 'framer-motion';
 
 function ProfilePage({ user }) {
   return (
-    <div>
-      <div className="mb-6 pb-4 border-b border-light-border">
-        <h2 className="text-xl font-bold text-charcoal">Personal Profile</h2>
-        <p className="text-sm text-slate-500 mt-1">
-          Complete your employment and financial details. 
-          Tax File Numbers and bank details are encrypted using AES-256 via pgcrypto. 
-          All data stored in Australian data centers (AWS Sydney).
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-slate-900 mb-2">Personal Profile</h2>
+        <p className="text-slate-600">
+          Complete your employment and financial details. All sensitive data is encrypted using AES-256.
         </p>
       </div>
       <ProfileForm user={user} />
-    </div>
+    </motion.div>
   );
 }
 

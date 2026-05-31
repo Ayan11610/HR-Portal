@@ -46,11 +46,11 @@ function App() {
         {<Route path="/landing" element={<LandingPage />} />}
         <Route path="/register" element={
           !user ? (
-            <div className="min-h-screen flex flex-col bg-sky-wash">
-              <header className="bg-portal-navy text-white shadow-md">
+            <div className="min-h-screen flex flex-col bg-slate-50">
+              <header className="bg-slate-900 text-white shadow-md">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
                   <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-                    <span className="text-portal-navy font-bold text-sm">HR</span>
+                    <span className="text-slate-900 font-bold text-sm">HR</span>
                   </div>
                   <h1 className="text-lg font-semibold tracking-wide">Australian Employee Onboarding and HR Portal</h1>
                 </div>
@@ -64,7 +64,7 @@ function App() {
                   </p>
                 </div>
               </main>
-              <footer className="bg-charcoal text-slate-400 text-xs py-3 px-6 text-center">
+              <footer className="bg-slate-900 text-slate-400 text-xs py-3 px-6 text-center">
                 <p>Data Residency: AWS Sydney (ap-southeast-2) | Compliant with Privacy Act 1988 and Fair Work Act 2009</p>
               </footer>
             </div>
@@ -73,11 +73,11 @@ function App() {
 
         <Route path="/" element={
           !user ? (
-            <div className="min-h-screen flex flex-col bg-sky-wash">
-              <header className="bg-portal-navy text-white shadow-md">
+            <div className="min-h-screen flex flex-col bg-slate-50">
+              <header className="bg-slate-900 text-white shadow-md">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
                   <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-                    <span className="text-portal-navy font-bold text-sm">HR</span>
+                    <span className="text-slate-900 font-bold text-sm">HR</span>
                   </div>
                   <h1 className="text-lg font-semibold tracking-wide">Australian Employee Onboarding and HR Portal</h1>
                 </div>
@@ -91,7 +91,7 @@ function App() {
                   </p>
                 </div>
               </main>
-              <footer className="bg-charcoal text-slate-400 text-xs py-3 px-6 text-center">
+              <footer className="bg-slate-900 text-slate-400 text-xs py-3 px-6 text-center">
                 <p>Data Residency: AWS Sydney (ap-southeast-2) | Compliant with Privacy Act 1988 and Fair Work Act 2009</p>
               </footer>
             </div>

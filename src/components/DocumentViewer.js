@@ -124,38 +124,38 @@ function DocumentViewer({ user, documentType, documentName, documentContent }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-slate-200 p-6 mb-6">
-      <h3 className="text-lg font-semibold text-slate-800 mb-4">{documentName}</h3>
+    <div className="portal-card p-6 mb-6">
+      <h3 className="text-xl font-bold text-slate-900 mb-6">{documentName}</h3>
       
       {acknowledged ? (
-        <div className="bg-green-50 border border-green-200 rounded-md p-4">
-          <p className="text-verified-green text-sm font-medium">Acknowledged on {new Date().toLocaleDateString()}</p>
+        <div className="status-complete p-4 rounded-lg">
+          <p className="text-verified-green text-sm font-semibold">✓ Acknowledged on {new Date().toLocaleDateString()}</p>
         </div>
       ) : (
         <>
           <div 
             onScroll={handleScroll}
-            className="h-64 overflow-y-auto border border-slate-300 rounded-md p-4 mb-4 bg-slate-50"
+            className="h-64 overflow-y-auto border-2 border-slate-200 rounded-lg p-5 mb-5 bg-white shadow-inner"
           >
-            <div className="prose prose-sm max-w-none">
+            <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed">
               {documentContent}
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-500">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm text-slate-600 font-medium">
               {scrolledToBottom 
-                ? 'You have read the entire document.' 
-                : 'Please scroll to the bottom to read the entire document.'}
+                ? '✓ You have read the entire document.' 
+                : '⚠ Please scroll to the bottom to read the entire document.'}
             </p>
             
             <button
               onClick={handleAcknowledge}
               disabled={!scrolledToBottom || loading}
-              className={`py-2 px-4 rounded-md font-medium text-sm transition duration-200 ${
-                scrolledToBottom
-                  ? 'bg-portal-navy hover:bg-blue-700 text-white'
-                  : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+              className={`py-2.5 px-6 rounded-lg font-semibold text-sm transition-all duration-300 transform ${
+                scrolledToBottom && !loading
+                  ? 'bg-anchor-blue hover:bg-[#2574A9] text-white hover:scale-[1.02] active:scale-[0.98] shadow-sm'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}
             >
               {loading ? 'Processing...' : 'I Acknowledge'}
@@ -165,10 +165,10 @@ function DocumentViewer({ user, documentType, documentName, documentContent }) {
       )}
 
       {message && (
-        <div className={`mt-4 p-3 rounded-md text-sm ${
+        <div className={`mt-5 p-4 rounded-lg text-sm font-medium ${
           messageType === 'success' 
-            ? 'bg-green-50 text-verified-green border border-green-200' 
-            : 'bg-red-50 text-red-800 border border-red-200'
+            ? 'bg-verified-green/10 text-verified-green border border-verified-green/20' 
+            : 'bg-red-50 text-red-700 border border-red-200'
         }`}>
           {message}
         </div>

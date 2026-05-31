@@ -4,94 +4,103 @@
 
 @layer base {
   body {
-    @apply bg-sky-wash text-charcoal font-sans;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased;
   }
 }
 
 @layer components {
+  /* Premium Card Component */
   .portal-card {
-    @apply bg-white rounded-lg shadow-sm border border-light-border;
+    @apply bg-white rounded-xl shadow-sm border border-slate-100 transition-all duration-300 ease-out;
   }
   
-  .portal-header {
-    @apply bg-portal-navy text-white py-4 px-6 shadow-md;
+  .portal-card:hover {
+    @apply shadow-md;
   }
   
+  /* Primary Button - Dark Slate */
   .btn-primary {
-    @apply py-2.5 px-4 bg-anchor-blue hover:bg-blue-700 text-white font-semibold rounded-md transition duration-200;
+    @apply py-2.5 px-5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-all duration-300 ease-out transform hover:scale-[1.02] active:scale-[0.98];
   }
   
+  /* Secondary Button - Anchor Blue Accent */
+  .btn-secondary {
+    @apply py-2.5 px-5 bg-anchor-blue hover:bg-[#2574A9] text-white font-medium rounded-lg transition-all duration-300 ease-out transform hover:scale-[1.02] active:scale-[0.98];
+  }
+  
+  /* Danger Button */
   .btn-danger {
-    @apply px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition duration-200;
+    @apply px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all duration-300 ease-out transform hover:scale-[1.02] active:scale-[0.98];
   }
   
+  /* Status Badges */
   .status-complete {
-    @apply text-verified-green font-semibold text-sm;
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-verified-green/10 text-verified-green border border-verified-green/20;
   }
   
   .status-pending {
-    @apply text-slate-400 font-medium text-sm;
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-alert-amber/10 text-alert-amber border border-alert-amber/20;
   }
-}
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  
+  .status-failed {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-200;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* Input Fields */
+  .input-field {
+    @apply w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-anchor-blue focus:border-transparent transition-all duration-200 text-sm bg-white;
   }
-}
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
+  
+  /* Skeleton Loading */
+  .skeleton {
+    @apply animate-pulse bg-slate-200 rounded;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+  
+  .shimmer-effect {
+    @apply relative overflow-hidden bg-slate-100;
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.3) 20%,
+      rgba(255, 255, 255, 0.5) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
   }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
+/* Smooth Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
 }
 
-.animate-slide-in-right {
-  animation: slide-in-right 0.6s ease-out forwards;
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
 }
 
-.animate-fade-in {
-  animation: fade-in 1s ease-out forwards;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.delay-100 {
-  animation-delay: 0.1s;
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
 }
 
-.delay-200 {
-  animation-delay: 0.2s;
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full;
 }
 
-.delay-300 {
-  animation-delay: 0.3s;
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
 }
 
-.delay-500 {
-  animation-delay: 0.5s;
-}
-
-.delay-700 {
-  animation-delay: 0.7s;
+/* Focus Visible for Accessibility */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-anchor-blue;
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function DashboardPage({ user }) {
   const [progress, setProgress] = useState({
@@ -78,9 +79,9 @@ function DashboardPage({ user }) {
   };
 
   const getStatusColor = (status) => {
-    if (status === 'Valid' || status === true) return 'text-verified-green bg-verified-green/10 border-verified-green/20';
-    if (status === 'Failed') return 'text-red-600 bg-red-50 border-red-200';
-    return 'text-alert-amber bg-alert-amber/10 border-alert-amber/20';
+    if (status === 'Valid' || status === true) return 'bg-verified-green/10 text-verified-green border-verified-green/20';
+    if (status === 'Failed') return 'bg-red-50 text-red-600 border-red-200';
+    return 'bg-alert-amber/10 text-alert-amber border-alert-amber/20';
   };
 
   const getStatusText = (status) => {
@@ -135,112 +136,141 @@ function DashboardPage({ user }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-4 border-portal-navy border-t-transparent rounded-full animate-spin"></div>
+        <div className="shimmer-effect w-full h-full rounded-xl"></div>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="mb-6 pb-4 border-b border-light-border">
-        <h2 className="text-xl font-bold text-charcoal">Welcome to Your Onboarding Portal</h2>
-        <p className="text-sm text-slate-500 mt-1">
-          Complete the steps below to finalize your employment setup. 
-          Data is stored securely in Australian data centers.
-        </p>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      {/* Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-slate-900 mb-2">Onboarding Dashboard</h2>
+        <p className="text-slate-600">Complete the steps below to finalize your employment setup</p>
       </div>
 
       {/* Progress Overview */}
-      <div className="portal-card p-6 mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-charcoal">Overall Progress</h3>
-          <span className="text-2xl font-bold text-portal-navy">{progress.overallPercent}%</span>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="portal-card p-8 mb-8"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-slate-900">Overall Progress</h3>
+          <motion.span 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring" }}
+            className="text-4xl font-bold text-anchor-blue"
+          >
+            {progress.overallPercent}%
+          </motion.span>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-3 mb-2">
-          <div 
-            className="bg-portal-navy h-3 rounded-full transition-all duration-500" 
-            style={{ width: `${progress.overallPercent}%` }}
-          ></div>
+        <div className="w-full bg-slate-100 rounded-full h-3 mb-3 overflow-hidden">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${progress.overallPercent}%` }}
+            transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+            className="bg-gradient-to-r from-anchor-blue to-verified-green h-3 rounded-full"
+          ></motion.div>
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-sm text-slate-600">
           {progress.overallPercent === 100 
-            ? 'All steps completed! HR will review your submission.' 
+            ? '✓ All steps completed! HR will review your submission.' 
             : `${5 - Math.ceil((progress.overallPercent / 100) * 5)} steps remaining`}
         </p>
-      </div>
+      </motion.div>
 
       {/* Steps Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {steps.map((step) => (
-          <div 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {steps.map((step, index) => (
+          <motion.div 
             key={step.number}
-            className={`portal-card p-5 ${step.locked ? 'opacity-60' : ''}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * index }}
+            whileHover={{ y: -4 }}
+            className={`portal-card p-6 ${step.locked ? 'opacity-60' : ''}`}
           >
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                step.status 
-                  ? 'bg-verified-green/10' 
-                  : step.locked 
-                    ? 'bg-slate-100' 
-                    : 'bg-alert-amber/10'
-              }`}>
-                <span className={`font-bold text-sm ${
+            <div className="flex items-start gap-4 mb-4">
+              <motion.div 
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
                   step.status 
-                    ? 'text-verified-green' 
+                    ? 'bg-verified-green' 
                     : step.locked 
-                      ? 'text-slate-400' 
-                      : 'text-alert-amber'
+                      ? 'bg-slate-200' 
+                      : 'bg-alert-amber'
+                }`}
+              >
+                <span className={`font-bold text-lg ${
+                  step.status || !step.locked ? 'text-white' : 'text-slate-400'
                 }`}>
                   {step.status ? '✓' : step.number}
                 </span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-charcoal text-sm">{step.title}</h3>
-                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(step.status)}`}>
+              </motion.div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-slate-900 mb-1">{step.title}</h3>
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(step.status)}`}>
                   {getStatusText(step.status)}
                 </span>
               </div>
             </div>
-            <p className="text-xs text-slate-600 mb-3">{step.description}</p>
+            <p className="text-sm text-slate-600 mb-4 leading-relaxed">{step.description}</p>
             {step.path && !step.locked && (
               <Link 
                 to={step.path}
-                className="inline-block text-xs text-anchor-blue hover:text-blue-700 font-medium underline"
+                className="inline-flex items-center text-sm text-anchor-blue hover:text-[#2574A9] font-medium transition-colors duration-300"
               >
                 Go to {step.title} →
               </Link>
             )}
             {step.locked && (
-              <p className="text-xs text-slate-400">Complete previous steps to unlock</p>
+              <p className="text-sm text-slate-400 flex items-center gap-2">
+                <span>🔒</span> Complete previous steps to unlock
+              </p>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Quick Stats */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="portal-card p-4">
-          <p className="text-xs text-slate-500 mb-1">Profile Status</p>
-          <p className={`text-sm font-semibold ${progress.profileComplete ? 'text-verified-green' : 'text-alert-amber'}`}>
-            {progress.profileComplete ? 'Complete' : 'Incomplete'}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
+        <div className="portal-card p-6">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Profile Status</p>
+          <p className={`text-xl font-bold ${progress.profileComplete ? 'text-verified-green' : 'text-alert-amber'}`}>
+            {progress.profileComplete ? '✓ Complete' : '○ Incomplete'}
           </p>
         </div>
-        <div className="portal-card p-4">
-          <p className="text-xs text-slate-500 mb-1">Documents Acknowledged</p>
-          <p className="text-sm font-semibold text-charcoal">
+        <div className="portal-card p-6">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Documents Acknowledged</p>
+          <p className="text-xl font-bold text-slate-900">
             {progress.documentsAcknowledged} / {progress.totalDocuments}
           </p>
         </div>
-        <div className="portal-card p-4">
-          <p className="text-xs text-slate-500 mb-1">Compliance Checks</p>
-          <p className="text-sm font-semibold text-charcoal">
-            VEVO: <span className={progress.vevoStatus === 'Valid' ? 'text-verified-green' : 'text-alert-amber'}>{progress.vevoStatus}</span>
-            {' | '}
-            ATO: <span className={progress.atoStatus === 'Valid' ? 'text-verified-green' : 'text-alert-amber'}>{progress.atoStatus}</span>
-          </p>
+        <div className="portal-card p-6">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Compliance Checks</p>
+          <div className="flex gap-4 text-sm font-medium">
+            <span className={progress.vevoStatus === 'Valid' ? 'text-verified-green' : 'text-alert-amber'}>
+              VEVO: {progress.vevoStatus}
+            </span>
+            <span className={progress.atoStatus === 'Valid' ? 'text-verified-green' : 'text-alert-amber'}>
+              ATO: {progress.atoStatus}
+            </span>
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
