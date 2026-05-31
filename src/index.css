@@ -1,13 +1,35 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-sky-wash text-charcoal font-sans;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer components {
+  .portal-card {
+    @apply bg-white rounded-lg shadow-sm border border-light-border;
+  }
+  
+  .portal-header {
+    @apply bg-portal-navy text-white py-4 px-6 shadow-md;
+  }
+  
+  .btn-primary {
+    @apply py-2.5 px-4 bg-anchor-blue hover:bg-blue-700 text-white font-semibold rounded-md transition duration-200;
+  }
+  
+  .btn-danger {
+    @apply px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition duration-200;
+  }
+  
+  .status-complete {
+    @apply text-verified-green font-semibold text-sm;
+  }
+  
+  .status-pending {
+    @apply text-slate-400 font-medium text-sm;
+  }
 }
